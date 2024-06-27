@@ -17,6 +17,7 @@
  */
 
 
+import type {Author, Work} from '../json-schema.ts';
 import type {ParsedAuthor, ParsedEntity, ParsedWork} from 'bookbrainz-data/lib/types/parser.d.ts';
 import {francMinMapping, identifiers, mapLanguage} from '../../helpers/mapping.ts';
 import {isNotDefined, sortName} from '../../helpers/utils.ts';
@@ -67,7 +68,7 @@ function detectLanguage(name: string, confidenceMinimum = 0.7): number {
 	return mapLanguage(confidence > confidenceMinimum ? topLanguage : 'mul');
 }
 
-function processWork(json: any) {
+function processWork(json: Work) {
 	if (isNotDefined(json)) {
 		return null;
 	}
@@ -154,7 +155,7 @@ function processWork(json: any) {
 		});
 	}
 
-	const metadataFields = [
+	const metadataFields: Array<keyof Work> = [
 		'subjects',
 		'subject_places',
 		'subject_people',
@@ -180,7 +181,7 @@ function processWork(json: any) {
 	return work;
 }
 
-function processAuthor(json) {
+function processAuthor(json: Author) {
 	if (isNotDefined(json)) {
 		return null;
 	}
@@ -317,6 +318,7 @@ function processAuthor(json) {
 
 
 	// Origin Ids for other sources
+	// TODO: This property only exists for an edition?
 	if (!isNotDefined(json.source_records) && (json.source_records instanceof Array)) {
 		json.source_records.forEach(record => {
 			author.metadata.originId.push(record);
@@ -362,7 +364,8 @@ function processAuthor(json) {
 
 
 	// Fields left out: [photograph, create]
-	const metadataFields = [
+	// TODO: The properties which cause a type error only exist for an edition or work?
+	const metadataFields: Array<keyof Author> = [
 		// Unclear what the field below is for
 		'bio',
 		// Unclear what the field below is for
