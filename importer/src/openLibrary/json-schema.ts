@@ -103,6 +103,7 @@ export interface Edition extends MinimalEntity {
 	translated_from?: Language[];
 	/** The title of the original language work */
 	translation_of?: string;
+	/** Author credit, inferred from work if missing? */
 	by_statement?: string;
 	/**
 	 * @example "300 grams", "0.3 kilos", "12 ounces", "1 pounds"
